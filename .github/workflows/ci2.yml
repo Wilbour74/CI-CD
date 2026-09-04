@@ -1,7 +1,8 @@
 name: CI
 
 on:
-  workflow_dispatch:
+  push:
+
 
 jobs:
   build:
@@ -16,32 +17,18 @@ jobs:
         with:
           node-version: "26.x"
           cache: npm
+      
+      - name: Mettre en place du cache npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
 
       - name: Installer les dependances
         run: npm ci
+      
+      - name: Lancer les tests
+        run: npm test
 
-      - name: Verifier la syntaxe
-        run: node --check server.js
-
-      - name: Lancer le build
-        run: npm run build
-
-      - name: Verifier le fichier de build
-        run: |
-          if [ -f dist/server.js ]; then
-            echo "Le fichier dist/server.js existe."
-          else
-            echo "Erreur : le fichier dist/server.js n'existe pas."
-            exit 1
-          fi
-
-      - name: Sauvegarder dist comme artefact
-        uses: actions/upload-artifact@v7
-        with:
-          name: dist
-          path: dist/
-
-      - name: Ecrire le resultat dans le resume GitHub
-        run: |
-          echo "Build reussi : dist/server.js a ete genere et sauvegarde comme artefact." >> "$GITHUB_STEP_SUMMARY"
-
+      - name: Ecrire le statut du job dans $GITHUB_STEP_SUMMARY
+        run: echo "Tests passed successfully!" >> $GITHUB_STEP_SUMMARY
