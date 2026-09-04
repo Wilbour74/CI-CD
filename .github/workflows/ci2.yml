@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Recuperer le code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Installer Node.js
         uses: actions/setup-node@v4
@@ -28,19 +28,20 @@ jobs:
 
       - name: Verifier le fichier de build
         run: |
-					if [ -d dist ]; then
-						echo "Le dossier dist existe."
-					else
-						echo "Erreur : le dossier dist n'existe pas."
-						exit 1
-					fi
+          if [ -f dist/server.js ]; then
+            echo "Le fichier dist/server.js existe."
+          else
+            echo "Erreur : le fichier dist/server.js n'existe pas."
+            exit 1
+          fi
 
       - name: Sauvegarder dist comme artefact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist/
 
       - name: Ecrire le resultat dans le resume GitHub
-        run: echo "Build reussi : dist/server.js a ete genere et sauvegarde comme artefact." >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "Build reussi : dist/server.js a ete genere et sauvegarde comme artefact." >> "$GITHUB_STEP_SUMMARY"
 
