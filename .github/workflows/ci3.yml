@@ -65,7 +65,10 @@ jobs:
 
   deploy:
     needs: test
+    environment: staging
     runs-on: ubuntu-latest
+    env:
+      API_URL: ${{ vars.API_URL }}
 
     steps:
       - name: Recuperer l artefact de build
@@ -79,6 +82,7 @@ jobs:
           {
             echo "## Build termine"
             echo "- Environnement : $TARGET_ENVIRONMENT"
+            echo "- API URL : $API_URL"
             echo "- Commit : $GITHUB_SHA"
             echo "- Artefact : application (dist/server.js)"
           } >> "$GITHUB_STEP_SUMMARY"
