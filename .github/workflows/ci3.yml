@@ -2,9 +2,18 @@ name: EXO3
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choisir l environnement de deploiement'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
 
 env:
-  TARGET_ENVIRONMENT: "staging"
+  TARGET_ENVIRONMENT: ${{ inputs.environment }}
 
 jobs:
   build:
@@ -65,7 +74,7 @@ jobs:
 
   deploy:
     needs: test
-    environment: staging
+    environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     env:
       API_URL: ${{ vars.API_URL }}
