@@ -1,0 +1,59 @@
+name: EXO3
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuper le depot
+        uses: actions/checkout@v7
+      
+      - name: Recuperer les dependances
+        uses: actions/setup-node@v7
+        with:
+          node-version: "20.x"
+          cache: npm
+      
+      - name: Execution du build
+        run: npm run build
+
+      - name: Publier dist comme artefact nommé application-build
+        uses: actions/upload-artifact@v7
+        with:
+          name: application
+          path: dist/
+
+    test:
+      needs: build
+      strategy:
+        fail-fast: false
+        max-parallel: 2
+
+        matrix:
+          node-version: [20, 22]
+          os: [ubuntu-latest, windows-latest]
+
+      runs-on: ${{ matrix.os }}
+
+      steps:
+        - name: Recuperer le code
+          uses: actions/checkout@v7
+
+        - name: Installer Node.js
+          uses: actions/setup-node@v7
+          with:
+            node-version: ${{ matrix.node-version }}
+            cache: npm
+
+        - name: Installer les dependances
+          run: npm ci
+
+        - name: Lancer les tests
+          run: npm test
+
+        - name: Ecrire le statut du job dans $GITHUB_STEP_SUMMARY
+          run: echo "Tests passed successfully!" >> $GITHUB_STEP_SUMMARY
+      
