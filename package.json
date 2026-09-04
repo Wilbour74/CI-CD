@@ -1,0 +1,28 @@
+{
+  "name": "ci-cd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.js",
+    "build:check": "node build.js && test -f dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wilbour74/CI-CD.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Wilbour74/CI-CD/issues"
+  },
+  "homepage": "https://github.com/Wilbour74/CI-CD#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^12.11.1",
+    "express": "^5.2.1"
+  }
+}
