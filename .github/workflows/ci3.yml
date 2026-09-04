@@ -1,7 +1,10 @@
 name: EXO3
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
+
+env:
+  TARGET_ENVIRONMENT: "staging"
 
 jobs:
   build:
@@ -59,4 +62,24 @@ jobs:
 
       - name: Ecrire le statut du job dans $GITHUB_STEP_SUMMARY
         run: echo "Tests passed successfully!" >> $GITHUB_STEP_SUMMARY
-      
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Recuperer l artefact de build
+        uses: actions/download-artifact@v7
+        with:
+          name: application
+          path: dist/
+
+      - name: Ecrire l environnement et le commit dans le resume
+        run: |
+          {
+            echo "## Build termine"
+            echo "- Environnement : $TARGET_ENVIRONMENT"
+            echo "- Commit : $GITHUB_SHA"
+            echo "- Artefact : application (dist/server.js)"
+          } >> "$GITHUB_STEP_SUMMARY"
+    
