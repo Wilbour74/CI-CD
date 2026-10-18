@@ -62,7 +62,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-
+      - name: Récupération de l'artifact de build
+        uses: actions/download-artifact@v7
+        with:
+          name: application
       - name: Installer les dependances
         run: npm ci
 
