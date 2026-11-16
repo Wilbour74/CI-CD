@@ -1,4 +1,4 @@
-name: EXO3
+name: Exercice 3
 
 on:
   workflow_dispatch:
